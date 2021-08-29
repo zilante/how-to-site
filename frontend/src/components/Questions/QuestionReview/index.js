@@ -1,24 +1,43 @@
 import React, { Component } from 'react';
 import QuestionService from '../../../questionService';
+import AnswerService from '../../../answerService';
+import Answer from '../../Answer';
 import styles from './index.module.css';
 import Button from '../../Button/index';
+
+function isCorrectAnswerBody(body) {
+    if(body.length === 0) {
+        return false;
+    }
+
+    return true;
+}
 
 class QuestionReview extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            question: null,
-            isLoading: false
+            id: null,
+            title: '',
+            body: '',
+            created: null,
+            author: '',
+            answers: [],
+
+            my_answer: '',
+            error: '',
+
+            isLoading: false,
         };
     }
 
-    loadQuestion() {
+    getQuestion() {
         this.setState({
             isLoading: true
         });
 
         let promise =
-         QuestionService.loadQuestion(this.props.match.params.questionId);
+         QuestionService.getQuestion(this.props.match.params.id);
 
         if(!promise) {
             return;
@@ -26,54 +45,106 @@ class QuestionReview extends Component {
 
         return promise.then(response => {
             this.setState({
-                question: response
-            });
+                id: response.question.id,
+                title: response.question.title,
+                body: response.question.body,
+                created: response.question.created,
+                author: response.question.username,
+                answers: response.answers,
 
-            this.setState({
-                isLoading: false
+                isLoading: false,
             });
         }).catch(error => {
             this.setState({
-                isLoading: false
+                isLoading: false,
+                error: error,
             });
         });
     }
 
     componentDidMount() {
-        this.loadQuestion();
+        this.getQuestion();
     }
 
+    onChangeMyAnswer = (event) => {
+        const value = event.target.value;
+        this.setState({
+            my_answer: value,         
+        });
+    }
+
+    onAnswer = (event) => {
+        event.preventDefault();
+
+        console.log('entering onAnswer')
+        const { id, my_answer } = this.state;
+
+        if (!isCorrectAnswerBody(my_answer)) {
+            console.log('in onAnswer: not correct answer body detected');
+
+            this.setState({
+                error: 'Write the answer!',
+            });
+        
+            return;
+        }
+
+        AnswerService.createAnswer(id, {body: my_answer})
+        .then(() => {
+            this.getQuestion();
+            this.props.history.push(`/question/${id}`);
+        }).catch(error => {
+            this.setState({
+                error: error.message,
+            });
+        });
+    };
+
     render() {
-        if(this.state.isLoading) {
+        const {title, body, created, author, answers, isLoading, error} =
+            this.state;
+
+        if(isLoading) {
             return <h1>Loading...</h1>
         }
+
+        const answerViews = [];
+        answers.forEach((answer) => {
+            answerViews.push(<Answer id={answer.id} body={answer.body} created={answer.created}
+                                     author={answer.username}/>)           
+        });
 
         return(
             <div>
                 <h1>
-                    {this.state.question.questionTitle}
+                    {title}
                 </h1>
 
                 <div className={styles.review}>
                     <p>
-                        {this.state.question.questionBody}
+                        {body}
                     </p>
 
                     <p className={styles.author}>
-                        {this.state.question.createdBy.email}
+                        {author}, {created}
                     </p>
 
-                    <hr> </hr>
-                    <h2>0 answers</h2>
+                    {/* <hr> </hr> */}
+                    {/* <h2>0 answers</h2> */}
+
+                    <div className={styles.answers}>
+                         {answerViews}        
+                    </div>
 
                     <form className={styles.wrapper}>
                     <h2>Your answer</h2>
+                    <p>{error}</p>
                     <textarea cols="70" rows="10" className={styles.answer}
-                                name="answer">
+                              onChange={this.onChangeMyAnswer} name="answer">
                                     Your answer
                     </textarea>
 
-                    <Button>Post your answer</Button>
+                    <Button onClick={this.onAnswer}>Post your answer</Button>
                     </form>
                 </div>
             </div>

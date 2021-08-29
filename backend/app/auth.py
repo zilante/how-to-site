@@ -10,11 +10,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-CORS(bp, resources={r"/auth/*": {"origins": "http://frontend:3000"}})
+CORS(bp, supports_credentials=True,
+     resources={r"/auth/*": {"origins": "http://frontend:3000"}})
 
 
 @bp.route('/register', methods=['POST'])
-@cross_origin(origin='frontend', headers=['Content-Type'])
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
 def register():
     name = request.json['name']
     surname = request.json['surname']
@@ -52,7 +54,8 @@ def register():
 
 
 @bp.route('/login', methods=['POST'])
-@cross_origin(origin='frontend', headers=['Content-Type'])
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
 def login():
     username = request.json['username']
     password = request.json['password']
@@ -96,7 +99,8 @@ def load_logged_in_user():
 
 
 @bp.route('/logout')
-@cross_origin(origin='frontend', headers=['Content-Type'])
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
 def logout():
     session.clear()
 
@@ -107,7 +111,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return jsonify({'message': 'log in firstly!'}), 401
 
         return view(**kwargs)
 

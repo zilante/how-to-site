@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 class Question extends Component {
     render() {
+        const { id, title, body } = this.props;
+
         return(
                 <div className={styles.question}>
                     {/* <p>
@@ -11,11 +13,11 @@ class Question extends Component {
                     </p> */}
 
                     <div className={styles.content}>
-                        <Link to={`/question_review/${this.props.question.questionId}`}>
-                              {this.props.question.title}
+                        <Link to={`/question/${id}`}>
+                              {title}
                         </Link>
                         <p>
-                              {this.props.question.body}
+                              {body}
                         </p>
                     </div>
                 </div>

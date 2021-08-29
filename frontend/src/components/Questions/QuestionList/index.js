@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import QuestionService from '../../../questionService';
-import Question from '../Question';
-import {Link} from 'react-router-dom';
+import Question from './Question';
 import styles from './index.module.css';
 import Button from '../../Button';
 
@@ -48,17 +47,20 @@ class QuestionList extends Component {
     }
 
     onAskQuestion = () => {
-        this.props.history.push("/question/new");
-    }
+        this.props.history.push("/create_question");
+    };
 
     render() {
-        if(this.state.isLoading) {
-            return <h1>Questions</h1>
+        const {isLoading, questions,} = this.state;
+
+        if(isLoading) {
+            return <h1>Loading...</h1>
         }
 
         const questionViews = [];
-        this.state.questions.forEach((question, questionIndex) => {
-            questionViews.push(<Question question={question}/>)           
+        questions.forEach((question, questionIndex) => {
+            questionViews.push(<Question id={question.id} title={question.title}
+                                         body={question.body}/>)           
         });
 
         return (

@@ -8,12 +8,13 @@ from app.auth import login_required
 from app.db import get_db
 
 bp = Blueprint('question', __name__)
-CORS(bp, resources={r"/*": {"origins": "http://frontend:3000"}})
+CORS(bp, supports_credentials=True,
+     resources={r"/*": {"origins": "http://frontend:3000"}})
 
 
 @bp.route('/questions')
-@cross_origin(origin='frontend', headers=['Content-Type'])
-# def index():
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
 def get_questions():
     cursor = get_db().cursor(dictionary=True)
 
@@ -28,34 +29,33 @@ def get_questions():
     return jsonify({'questions': questions}), 200
 
 
-@bp.route('/create_question', methods=('GET', 'POST'))
+@bp.route('/create_question', methods=['POST'])
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
 @login_required
 def create_question():
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        error = None
+    title = request.json['title']
+    body = request.json['body']
+    error = ''
 
-        if not title:
-            error = 'Title is required.'
+    if not title:
+        error = 'Title is required.'
 
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            cursor = db.cursor()
-            cursor.execute(
-                'INSERT INTO question (title, body, author_id)'
-                ' VALUES (%s, %s, %s)',
-                (title, body, g.user['id'])
-            )
+    if not error:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(
+            'INSERT INTO question (title, body, author_id)'
+            ' VALUES (%s, %s, %s)',
+            (title, body, g.user['id'])
+        )
 
-            cursor.close()
-            db.commit()
+        cursor.close()
+        db.commit()
 
-            return redirect(url_for('question.index'))
+        return jsonify({'message': 'Successfully created question!'}), 200
 
-    return render_template('blog/create.html')
+    return jsonify({'message': error}), 400
 
 
 def get_question_from_db(id, check_author=True):
@@ -69,29 +69,36 @@ def get_question_from_db(id, check_author=True):
     question = cursor.fetchone()
     cursor.close()
 
-    if question is None:
-        abort(404, f"Question id {id} doesn't exist.")
+    # if question is None:
+    #     abort(404, f"Question id {id} doesn't exist.")
 
-    if check_author and question['author_id'] != g.user['id']:
-        abort(403)
+    # if check_author and question['author_id'] != g.user['id']:
+    #     abort(403)
 
     return question
 
 
-@bp.route('/<int:id>')
+@bp.route('/question/<int:id>')
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
 def get_question(id):
     question = get_question_from_db(id)
+    if question is None:
+        return jsonify({'message': "Question id {} doesn't exist."\
+                       .format(id)}), 404
 
     cursor = get_db().cursor(dictionary=True)
     cursor.execute(
-        'SELECT * FROM answer'
-        ' WHERE question_id = %s',
+        'SELECT a.id, body, created, username'
+        ' FROM answer a JOIN user u ON a.author_id = u.id'
+        ' WHERE question_id = %s'
+        ' ORDER BY created DESC',
         (id,)
     )
     answers = cursor.fetchall()
     cursor.close()
 
-    return render_template('blog/index.html', question=question, answers=answers)
+    return jsonify({'question': question, 'answers': answers}), 200
 
 
 @bp.route('/<int:id>/update_question', methods=('GET', 'POST'))

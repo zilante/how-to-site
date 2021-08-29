@@ -4,7 +4,7 @@ import styles from './index.module.css';
 import Button from '../../Button'
 import Input from '../../Input'
 
-import {connect} from "react-redux";
+// import {connect} from "react-redux";
 
 function isCorrectQuestionTitle(title) {
     if(title.length === 0) {
@@ -14,18 +14,18 @@ function isCorrectQuestionTitle(title) {
     return true;
 }
 
-function isCorrectQuestionBody(body) {
-    if(body.length === 0) {
-        return false;
-    }
+// function isCorrectQuestionBody(body) {
+//     if(body.length === 0) {
+//         return false;
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 class NewQuestion extends Component {
     state = {
-        questionTitle: '',
-        questionBody: '',
+        title: '',
+        body: '',
         errorText: ''
     };
 
@@ -33,67 +33,44 @@ class NewQuestion extends Component {
         event.preventDefault();
         console.log('in handleSubmit');
 
-        if (!isCorrectQuestionTitle(this.state.questionTitle)) {
+        if (!isCorrectQuestionTitle(this.state.title)) {
             console.log('in handleSubmit: not correct quesion title detected');
 
             this.setState({
-                errorText: 'Введите заголовок вопроса!'
+                errorText: 'Give the title to your question!'
               });
         
               return
         }
 
-        if (!isCorrectQuestionBody(this.state.questionBody)) {
-            this.setState({
-                errorText: 'Введите вопрос!'
-              });
-        
-              return
-        }
-
-        const token = this.props.user;
-        if (!token) {
-            console.log('in handleSubmit: not authorized');
-
-            this.setState({
-                errorText: 'Залогиньтесь!'
-              });
-        
-            return
-        }
 
         const questionData = {
-            questionTitle: this.state.questionTitle,
-            questionBody: this.state.questionBody
+            title: this.state.title,
+            body: this.state.body
         };
 
-        QuestionService.createQuestion(questionData, token)
-        .then(response => {
+        QuestionService.createQuestion(questionData) //, token)
+        // .then(response => {
+        .then(() => {
             this.props.history.push("/questions");
         }).catch(error => {
-            if(error.status === 401) {
-                this.setState({
-                    errorText: 'Сперва залогиньтесь!'
-                  });
-            } else {
-                this.setState({
-                    errorText: 'Произошла неизвестная ошибка...'
-                  });   
-            }
+            this.setState({
+                errorText: error.message
+                });
         });
     }
 
     onChangeTitle = (event) => {
         const value = event.target.value;
         this.setState({
-            questionTitle: value   
+            title: value   
         });
     }
 
     onChangeBody = (event) => {
         const value = event.target.value;
         this.setState({
-            questionBody: value            
+            body: value            
         });
     }
 
@@ -122,11 +99,11 @@ class NewQuestion extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-      user: state.userReducer.user
-    }
-};
+// const mapStateToProps = (state) => {
+//     return {
+//       user: state.userReducer.user
+//     }
+// };
 
-export default connect(mapStateToProps, null)(NewQuestion);
-// export default NewQuestion;
+// export default connect(mapStateToProps, null)(NewQuestion);
+export default NewQuestion;

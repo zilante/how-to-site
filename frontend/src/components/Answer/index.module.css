@@ -1,0 +1,28 @@
+div.answer {
+    display: flex;
+    flex-direction: row;
+  
+    width: 100%;
+  }
+  
+div.answer div.content {
+    overflow: hidden;
+    margin-left: 20px;
+  
+    border-left: 1px solid #999; /* Параметры линии слева */
+    border-bottom: 1px solid #999; /* Параметры линии снизу */
+    border-right: 1px solid #999; /* Параметры линии слева */
+    border-top: 1px solid #999; /* Параметры линии снизу */
+  
+    padding-left: 10px; /* Отступ от линии слева до текста  */
+    padding-bottom: 10px;
+  
+    width: 100%;
+  }
+
+p.author {
+    text-align: right;
+}
+/* div.question div.content h2 {
+    color: #0FAEA5;
+  } */

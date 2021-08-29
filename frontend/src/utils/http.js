@@ -12,7 +12,8 @@ export default function http(path, method, body = {}, token = null) {
     return fetch('http://localhost:5000' + path,  {
       method,
       body: Object.keys(body).length === 0 ? null : JSON.stringify(body),
-      credentials: "omit",
+      // credentials: "omit",
+      credentials: 'include',
       headers: headers,
       mode: 'cors'
     }).then((response) => {

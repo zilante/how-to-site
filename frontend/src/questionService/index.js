@@ -4,12 +4,12 @@ const QuestionService = {
   getAllQuestions() {
     return http('/questions', 'GET')
   },
-  createQuestion(questionData, token) {
-    return http('api/questions', 'POST', questionData, token) 
+  createQuestion(questionData) { // , token) {
+    return http('/create_question', 'POST', questionData) // , token) 
   },
-  loadQuestion(questionId) {
-    return http('api/questions/' + questionId, 'GET');
-  }
+  getQuestion(id) {
+    return http('/question/' + id, 'GET');
+  },
 };
 
 export default QuestionService;
