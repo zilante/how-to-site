@@ -1,10 +1,10 @@
 a {
-    font-size: 24pt; /* Размер шрифта в пунктах */
-    font-family: Georgia, Times, serif; /* Семейство шрифтов */
-    font-weight: normal; /* Нормальное начертание текста  */
-    text-align: center; /* Выравнивание по ширине */
-    margin-top: 50px
-  }
+    font-size: 24pt;
+    font-family: Georgia, Times, serif;
+    font-weight: normal;
+    text-align: center;
+    margin-top: 50px;
+}
 
 div.questions {
     display: flex;
@@ -25,7 +25,6 @@ button.ask_question {
   width: 150px;
   height: 50px;
   float: right;
-  /*display: block;*/
   background-color: #3793C7;
   color: #FFFFFF;
 }
@@ -41,12 +40,12 @@ div.questions div.question div.content {
   overflow: hidden;
   margin-left: 20px;
 
-  border-left: 1px solid #999; /* Параметры линии слева */
-  border-bottom: 1px solid #999; /* Параметры линии снизу */
-  border-right: 1px solid #999; /* Параметры линии слева */
-  border-top: 1px solid #999; /* Параметры линии снизу */
+  border-left: 1px solid #999;
+  border-bottom: 1px solid #999;
+  border-right: 1px solid #999;
+  border-top: 1px solid #999;
 
-  padding-left: 10px; /* Отступ от линии слева до текста  */
+  padding-left: 10px;
   padding-bottom: 10px;
 
   width: 100%;

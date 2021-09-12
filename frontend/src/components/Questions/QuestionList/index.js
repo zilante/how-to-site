@@ -9,13 +9,13 @@ class QuestionList extends Component {
         super(props);
         this.state = {
             questions: [],
-            isLoading: false
+            isLoading: false,
         };
     }
 
     loadQuestionList() {
         this.setState({
-            isLoading: true
+            isLoading: true,
         });
 
         let promise = QuestionService.getAllQuestions();
@@ -28,16 +28,15 @@ class QuestionList extends Component {
             const questions = this.state.questions.slice();
 
             this.setState({
-                // questions: questions.concat(response.content),
                 questions: questions.concat(response.questions),
             });
 
             this.setState({
-                isLoading: false
+                isLoading: false,
             });
-        }).catch(error => {
+        }).catch(() => {
             this.setState({
-                isLoading: false
+                isLoading: false,
             });
         });
     }
@@ -58,9 +57,9 @@ class QuestionList extends Component {
         }
 
         const questionViews = [];
-        questions.forEach((question, questionIndex) => {
+        questions.forEach((question) => {
             questionViews.push(<Question id={question.id} title={question.title}
-                                         body={question.body}/>)           
+                                         body={question.body}/>);        
         });
 
         return (

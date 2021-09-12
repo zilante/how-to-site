@@ -1,9 +1,11 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import userReducer from './user'
+import userReducer from './user';
+import questionReducer from './question';
 
 const rootReducer = combineReducers({
-  userReducer
+  userReducer,
+  questionReducer,
 });
 
-export default rootReducer
+export default rootReducer;

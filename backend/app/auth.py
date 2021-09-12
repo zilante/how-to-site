@@ -1,8 +1,6 @@
 import functools
 
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
-)
+from flask import (Blueprint, g, request, session, jsonify)
 from flask_cors import cross_origin, CORS
 from mysql.connector import errors
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -78,7 +76,8 @@ def login():
         session.clear()
         session['user_id'] = user['id']
 
-        return jsonify({'message': 'successfully logged in!'}), 200
+        return jsonify({'message': 'Successfully logged in!',
+                        'user': user}), 200
 
     return jsonify({'message': error}), 400
 
@@ -107,11 +106,18 @@ def logout():
     return jsonify({'message': 'successfully logged out!'}), 200
 
 
+@bp.route('/current_user')
+@cross_origin(origin='frontend', supports_credentials=True,
+              headers=['Content-Type'])
+def current_user():
+    return jsonify({'user': g.user, 'message': 'Successfully gor current user!'}), 200
+
+
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return jsonify({'message': 'log in firstly!'}), 401
+            return jsonify({'message': 'Log in firstly!'}), 401
 
         return view(**kwargs)
 

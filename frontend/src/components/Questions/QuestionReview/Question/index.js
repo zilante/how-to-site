@@ -1,28 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { withRouter } from "react-router";
+import Button from '../../../Button';
+import QuestionEditor from '../QuestionEditor';
 import styles from './index.module.css';
-import Button from '../Button/index';
-import AnswerEditor from './AnswerEditor';
 
-class Answer extends Component {
+class Question extends React.Component {
     state = {
-      is_editing: false,
-      edited_body: '',
       error: '',
+      is_editing: false,
+      edited_title: '',
+      edited_body: '',
     };
 
     onEdit = (event) => {
         event.preventDefault();
         console.log('entering onEdit');
 
-        const { body } = this.props;
+        const { title, body } = this.props;
 
         this.setState({
             is_editing: true,
+            edited_title: title,
             edited_body: body,
         });
     };
 
-    onChangeEdited = (event) => {
+    onChangeEditedTitle = (event) => {
+        event.preventDefault();
+
+        this.setState({
+            edited_title: event.target.value,
+        });
+    };
+
+    onChangeEditedBody = (event) => {
         event.preventDefault();
 
         this.setState({
@@ -33,18 +44,18 @@ class Answer extends Component {
     onSubmitEdited = (event) => {
         event.preventDefault();
 
-        const { id, question_id, editAnswer, actionError } = this.props;
-        const { edited_body } = this.state;
+        const { id, editQuestion, actionError } = this.props;
+        const { edited_title, edited_body } = this.state;
 
-        if (!edited_body) {
+        if (!edited_title) {
             this.setState({
-                error: 'Write the answer!',
+                error: 'Give the title to your question!',
             });
 
             return;
         }
 
-        editAnswer(id, question_id, { body: edited_body, }).then(() => {
+        editQuestion(id, { title: edited_title, body: edited_body }).then(() => {
             if (actionError) {
                 this.setState({
                     error: actionError,
@@ -56,42 +67,44 @@ class Answer extends Component {
             this.setState({
                 error: '',
                 is_editing: false,
+                edited_title: '',
                 edited_body: '',
             });
         });
     };
 
-    onDelete = (event) => {
-        const { id, question_id, deleteAnswer, actionError } = this.props;
 
+    onDelete = (event) => {
         event.preventDefault();
         console.log('entering onDelete');
 
-        deleteAnswer(id, question_id).then(() => {
+        const { id, deleteQuestion, actionError, history } = this.props;
+
+        deleteQuestion(id).then(() => {
             if (actionError) {
                 this.setState({
                     error: actionError,
                 });
+    
+                return;
             }
+
+            history.push('/questions');
         });
     };
 
     render() {
-        const { is_editing, error } = this.state;
-        const { body, created, author, user } = this.props;
-        const username = user ? user.username : '';
+        const { is_editing, error, edited_title, edited_body } = this.state;
+        const { username, title, body, created, author } = this.props;
 
         return(
             <div>
-                <p>
-                    {body}
-                </p>
+                <h1> {title} </h1>
+                <p> {body} </p>
 
                 <p className={styles.author}>
                     {author}, {created}
                 </p>
-
-                <p>{error}</p>
 
                 {username === author && (
                     <div className={styles.buttons}>
@@ -104,12 +117,16 @@ class Answer extends Component {
                     </div>
                 )}
 
+                <p> {error} </p>
+
                 {username === author && is_editing && (
-                    <AnswerEditor
-                        onChange={this.onChangeEdited}
+                    <QuestionEditor
+                        onChangeTitle={this.onChangeEditedTitle}
+                        onChangeBody={this.onChangeEditedBody}
                         onSubmit={this.onSubmitEdited}
-                        body={body}
-                        submit_button_text="Change answer"
+                        title={edited_title}
+                        body={edited_body}
+                        submit_button_text="Change question"
                         cols="100"
                     />
                 )}
@@ -118,4 +135,4 @@ class Answer extends Component {
     }
 }
 
-export default Answer;
+export default withRouter(Question);

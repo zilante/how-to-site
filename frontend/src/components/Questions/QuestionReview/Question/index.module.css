@@ -1,0 +1,24 @@
+.author {
+    text-align: right;
+  }
+  
+.buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.delete_button {
+    width: 180px;
+    height: 40px;
+    display: block;
+    background-color:#D11A2A;
+    color: #FFFFFF;
+}
+
+.edit_button {
+    width: 180px;
+    height: 40px;
+    display: block;
+    background-color: #2AD11A;
+    color: #FFFFFF;
+}

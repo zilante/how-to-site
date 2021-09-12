@@ -7,20 +7,16 @@ class Question extends Component {
         const { id, title, body } = this.props;
 
         return(
-                <div className={styles.question}>
-                    {/* <p>
-                        {this.props.question.answerCount} answers
-                    </p> */}
-
-                    <div className={styles.content}>
-                        <Link to={`/question/${id}`}>
-                              {title}
-                        </Link>
-                        <p>
-                              {body}
-                        </p>
-                    </div>
+            <div className={styles.question}>
+                <div className={styles.content}>
+                    <Link to={`/question/${id}`}>
+                            {title}
+                    </Link>
+                    <p>
+                            {body}
+                    </p>
                 </div>
+            </div>
         );
     }
 }

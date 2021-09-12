@@ -1,6 +1,6 @@
 const initialState = {
     isLoading: false,
-    error: false,
+    error: null,
     user: null
   };
   
@@ -16,18 +16,25 @@ const initialState = {
         return {
           ...state,
           isFetching: false,
-          error: action.payload
+          error: action.payload,
         };
-      case 'USER_SUCCESS':
+      case 'AUTH_SUCCESS':
         return {
           ...state,
           isFetching: false,
           error: null,
-          user: action.payload
+          user: action.payload,
+        };
+      case 'LOGOUT_SUCCESS':
+        return {
+          ...state,
+          isFetching: false,
+          error: null,
+          user: null,
         };
       default:
         return state;
     }
   };
   
-  export default userReducer
+  export default userReducer;

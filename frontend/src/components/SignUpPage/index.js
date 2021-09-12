@@ -1,14 +1,14 @@
 import React from 'react';
 import styles from './index.module.css';
-import {signupAction} from "../../actions/index";
-import Button from '../Button'
-import Input from '../Input'
+import {signupAction} from "../../actions/user_actions";
+import Button from '../Button';
+import Input from '../Input';
 
 import {connect} from "react-redux";
 
 function isCorrectUserData(data) {
-    return data.length > 0
-  }
+    return data.length > 0;
+}
 
 class SignUpPage extends React.Component {
     state = {
@@ -41,7 +41,7 @@ class SignUpPage extends React.Component {
       } = this.state;
 
       return (
-        <form className={styles.wrapper}>
+        <form className={styles.form}>
             <h2>Welcome</h2>
             <Input name="username" placeholder="Username"
                 onChange={this.onChangeUsername} value={username} error={usernameError} />
@@ -66,35 +66,35 @@ class SignUpPage extends React.Component {
             </div>
             <p>{errorText}</p>
         </form>
-      )
+      );
     }
   
     onChangeUsername = (event) => {
       console.log('onChangeUsername()');
       this.resetAllErrors();
-      this.setState({username: event.target.value})
+      this.setState({username: event.target.value});
     };
 
     onChangeName = (event) => {
       console.log('onChangeName()');
       this.resetAllErrors();
-      this.setState({name: event.target.value})
+      this.setState({name: event.target.value});
     };
 
     onChangeSurname = (event) => {
       console.log('onChangeSurname()');
       this.resetAllErrors();
-      this.setState({surname: event.target.value})
+      this.setState({surname: event.target.value});
     };
   
     onChangePassword = (event) => {
       this.resetAllErrors();
-      this.setState({password:  event.target.value})
+      this.setState({password:  event.target.value});
     };
   
     onChangeRepeatPassword = (event) => {
       this.resetAllErrors();
-      this.setState({repeatPassword:  event.target.value})
+      this.setState({repeatPassword:  event.target.value});
     };
   
     resetAllErrors = () => {
@@ -103,7 +103,7 @@ class SignUpPage extends React.Component {
         passwordError: "false",
         repeatPasswordError: "false",
         errorText: ''
-      })
+      });
     };
   
     onSignUp = (event) => {
@@ -123,7 +123,7 @@ class SignUpPage extends React.Component {
             errorText: 'Type the username!',
         });
   
-        return
+        return;
       }
 
       if (!isCorrectUserData(name)) {
@@ -132,7 +132,7 @@ class SignUpPage extends React.Component {
             errorText: 'Type the name!',
         });
   
-        return
+        return;
       }
 
       if (!isCorrectUserData(surname)) {
@@ -141,7 +141,7 @@ class SignUpPage extends React.Component {
             errorText: 'Type the surname!',
         });
   
-        return
+        return;
       }
   
       if (!isCorrectUserData(password)) {
@@ -150,17 +150,17 @@ class SignUpPage extends React.Component {
           errorText: 'Type the password!',
         });
   
-        return
+        return;
       }
   
       if (password !== repeatPassword) {
         this.setState({
           passwordError: true,
           repeatPasswordError: true,
-          errorText: 'Password are not the same!'
+          errorText: 'Password are not the same!',
         });
   
-        return
+        return;
       }
   
       this.props.signup(name, surname, username, password).then(() => {
@@ -180,29 +180,29 @@ class SignUpPage extends React.Component {
     };
 }
 
-  const mapStateToProps = (state) => {
-    return {
-      error: state.userReducer.error
-    }
+const mapStateToProps = (state) => {
+  return {
+    error: state.userReducer.error,
   };
+};
 
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      signup: signupDispatch(dispatch),
-    }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signup: signupDispatch(dispatch),
   };
+};
 
-  function signupDispatch(dispatch) {
-    console.log('signupDispatch');
+function signupDispatch(dispatch) {
+  console.log('signupDispatch');
 
-    return (...args) => {
-        return new Promise((resolve) => { 
-            console.log('in promise before signupAction');
+  return (...args) => {
+      return new Promise((resolve) => { 
+          console.log('in promise before signupAction');
 
-            const dispatchCaller = signupAction(...args);
-            dispatchCaller(dispatch).then(() => {resolve();});
-        });
-    };
-  }
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(SignUpPage);
+          const dispatchCaller = signupAction(...args);
+          dispatchCaller(dispatch).then(() => {resolve();});
+      });
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpPage);

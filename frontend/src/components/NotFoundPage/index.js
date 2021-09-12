@@ -5,7 +5,7 @@ function NotFoundPage() {
         <div>
             <h1>NotFound</h1>
         </div>
-    )
+    );
 }
 
-export default NotFoundPage
+export default NotFoundPage;

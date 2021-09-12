@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from "react-router-dom";
-import styles from './index.module.css'
-import Button from '../Button'
+import styles from './index.module.css';
+import Button from '../Button';
 
 function Start() {
     const history = useHistory();
@@ -22,7 +22,7 @@ function Start() {
             <Button onClick={signUp}>Sign up</Button>
             </div>
         </div>
-    )
+    );
 }
 
-export default Start
+export default Start;

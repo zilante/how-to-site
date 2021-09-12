@@ -1,28 +1,24 @@
-div.answer {
-    display: flex;
-    flex-direction: row;
-  
-    width: 100%;
-  }
-  
-div.answer div.content {
-    overflow: hidden;
-    margin-left: 20px;
-  
-    border-left: 1px solid #999; /* Параметры линии слева */
-    border-bottom: 1px solid #999; /* Параметры линии снизу */
-    border-right: 1px solid #999; /* Параметры линии слева */
-    border-top: 1px solid #999; /* Параметры линии снизу */
-  
-    padding-left: 10px; /* Отступ от линии слева до текста  */
-    padding-bottom: 10px;
-  
-    width: 100%;
-  }
-
 p.author {
     text-align: right;
 }
-/* div.question div.content h2 {
-    color: #0FAEA5;
-  } */
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.buttons button.delete_button {
+    width: 100px;
+    height: 40px;
+    display: block;
+    background-color:#D11A2A;
+    color: #FFFFFF;
+}
+
+.buttons button.edit_button {
+  width: 100px;
+  height: 40px;
+  display: block;
+  background-color: #2AD11A;
+  color: #FFFFFF;
+}

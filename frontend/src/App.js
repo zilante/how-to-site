@@ -9,17 +9,9 @@ import NewQuestion from './components/Questions/NewQuestion';
 import QuestionList from './components/Questions/QuestionList';
 import QuestionReview from './components/Questions/QuestionReview';
 
-// import ReviewPage1 from './components/ReviewPage/question1'
-// import ReviewPage2 from './components/ReviewPage/question2'
-// import ReviewPage3 from './components/ReviewPage/question3'
-// import ReviewPage4 from './components/ReviewPage/question4'
-// import ReviewPage5 from './components/ReviewPage/question5'
-// import ReviewPage6 from './components/ReviewPage/question6'
+import TopMenu from './components/TopMenu';
+import NavBar from './components/NavBar';
 
-import TopMenu from './components/TopMenu'
-import NavBar from './components/NavBar'
-
-// to add and edit paths
 function App() {
     return (
         <BrowserRouter>
@@ -39,13 +31,6 @@ function App() {
                         <Route path='/question/:id'
                             render={(props) => (<QuestionReview {...props}/>)} />
 
-                        {/* <Route path='/question_review/1' component={ReviewPage1} />
-                        <Route path='/question_review/2' component={ReviewPage2} />
-                        <Route path='/question_review/3' component={ReviewPage3} />
-                        <Route path='/question_review/4' component={ReviewPage4} />
-                        <Route path='/question_review/5' component={ReviewPage5} />
-                        <Route path='/question_review/6' component={ReviewPage6} /> */}
-
                         <Route component={NotFound}/>
                     </Switch>
 
@@ -53,7 +38,7 @@ function App() {
                 </Router>
             </div>
         </BrowserRouter>
-    )
+    );
 }
 
-export default App
+export default App;

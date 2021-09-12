@@ -1,11 +1,11 @@
 def create_tables(db):
-  cursor = db.cursor()
+    cursor = db.cursor()
 
-  cursor.execute("DROP TABLE IF EXISTS user")
-  cursor.execute("DROP TABLE IF EXISTS question")
-  cursor.execute("DROP TABLE IF EXISTS answer")
+    cursor.execute("DROP TABLE IF EXISTS answer")
+    cursor.execute("DROP TABLE IF EXISTS question")
+    cursor.execute("DROP TABLE IF EXISTS user")
 
-  cursor.execute("CREATE TABLE user ( \
+    cursor.execute("CREATE TABLE user ( \
                      id INTEGER PRIMARY KEY AUTO_INCREMENT, \
                      name VARCHAR(20) NOT NULL, \
                      surname VARCHAR(20) NOT NULL, \
@@ -13,7 +13,7 @@ def create_tables(db):
                      password TEXT NOT NULL \
                   )"
                  )
-  cursor.execute("CREATE TABLE question ( \
+    cursor.execute("CREATE TABLE question ( \
                      id INTEGER PRIMARY KEY AUTO_INCREMENT, \
                      author_id INTEGER NOT NULL, \
                      created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, \
@@ -22,7 +22,7 @@ def create_tables(db):
                      FOREIGN KEY (author_id) REFERENCES user (id) \
                   )"
                  )
-  cursor.execute("CREATE TABLE answer ( \
+    cursor.execute("CREATE TABLE answer ( \
                      id INTEGER PRIMARY KEY AUTO_INCREMENT, \
                      author_id INTEGER NOT NULL, \
                      question_id INTEGER NOT NULL, \
@@ -30,8 +30,9 @@ def create_tables(db):
                      body TEXT NOT NULL, \
                      FOREIGN KEY (author_id) REFERENCES user (id), \
                      FOREIGN KEY (question_id) REFERENCES question (id) \
+                     ON DELETE CASCADE \
                    )"
                  )
 
-  cursor.close()
-  db.commit()
+    cursor.close()
+    db.commit()

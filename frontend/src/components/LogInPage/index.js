@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './index.module.css';
-import {loginAction} from "../../actions/index";
-import Button from '../Button'
-import Input from '../Input'
+import {loginAction} from "../../actions/user_actions";
+import Button from '../Button';
+import Input from '../Input';
 
 import {connect} from "react-redux";
 
@@ -25,7 +25,7 @@ class LogInPage extends React.Component {
       } = this.state;
   
       return (
-        <form className={styles.wrapper}>
+        <form className={styles.form}>
             <h2>Welcome</h2>
             <Input name="username" placeholder="Username"
                 onChange={this.onChangeUsername} value={username} error={usernameError} />
@@ -39,26 +39,26 @@ class LogInPage extends React.Component {
             </div>
             <p>{errorText}</p>
         </form>
-      )
+      );
     }
   
     onChangeUsername = (event) => {
       console.log('onChangeUsername()');
       this.resetAllErrors();
-      this.setState({username: event.target.value})
+      this.setState({username: event.target.value});
     };
   
     onChangePassword = (event) => {
       this.resetAllErrors();
-      this.setState({password:  event.target.value})
+      this.setState({password:  event.target.value});
     };
   
     resetAllErrors = () => {
       this.setState({
         usernameError: "false",
         passwordError: "false",
-        errorText: ''
-      })
+        errorText: '',
+      });
     };
 
     onToLogin = (event) => {
@@ -75,36 +75,36 @@ class LogInPage extends React.Component {
 
         if (error) {
           this.setState({
-              errorText: error
+              errorText: error,
             });
 
           return;
         } else {
           this.props.history.push('/questions');
         }
-      })
-    }
-  }
-
-  const mapStateToProps = (state) => {
-    return {
-      error: state.userReducer.error
-    }
-  };
-
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      login: loginDispatch(dispatch),
-    }
-  };
-
-  function loginDispatch(dispatch) {
-    return (...args) => {
-        return new Promise((resolve) => { 
-            const dispatchCaller = loginAction(...args);
-            dispatchCaller(dispatch).then(() => {resolve();});
-        });
+      });
     };
-  }
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(LogInPage);
+}
+
+const mapStateToProps = (state) => {
+  return {
+    error: state.userReducer.error,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: loginDispatch(dispatch),
+  };
+};
+
+function loginDispatch(dispatch) {
+  return (...args) => {
+      return new Promise((resolve) => { 
+          const dispatchCaller = loginAction(...args);
+          dispatchCaller(dispatch).then(() => {resolve();});
+      });
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogInPage);

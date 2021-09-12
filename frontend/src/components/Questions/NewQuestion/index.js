@@ -1,78 +1,81 @@
 import React, { Component } from 'react';
-import QuestionService from '../../../questionService';
+import { createQuestionAction } from '../../../actions/question_actions';
 import styles from './index.module.css';  
-import Button from '../../Button'
-import Input from '../../Input'
+import Button from '../../Button';
+import Input from '../../Input';
 
-// import {connect} from "react-redux";
+import {connect} from "react-redux";
 
 function isCorrectQuestionTitle(title) {
-    if(title.length === 0) {
-        return false;
-    }
-
-    return true;
+    return title.length > 0;
 }
-
-// function isCorrectQuestionBody(body) {
-//     if(body.length === 0) {
-//         return false;
-//     }
-
-//     return true;
-// }
 
 class NewQuestion extends Component {
     state = {
         title: '',
         body: '',
-        errorText: ''
+        errorText: '',
     };
 
     handleSubmit = (event) => {
+        const { title, body } = this.state;
+        const { history, createQuestion, user, actionError } = this.props;
+
         event.preventDefault();
         console.log('in handleSubmit');
 
-        if (!isCorrectQuestionTitle(this.state.title)) {
+        if (!isCorrectQuestionTitle(title)) {
             console.log('in handleSubmit: not correct quesion title detected');
 
             this.setState({
-                errorText: 'Give the title to your question!'
-              });
-        
-              return
+                errorText: 'Give the title to your question!',
+            });
+            return;
+        }
+
+        if (!user) {
+            this.setState({
+                errorText: 'Log in firstly!',
+            });
+            return;
         }
 
 
         const questionData = {
-            title: this.state.title,
-            body: this.state.body
+            title: title,
+            body: body,
         };
 
-        QuestionService.createQuestion(questionData) //, token)
-        // .then(response => {
-        .then(() => {
-            this.props.history.push("/questions");
-        }).catch(error => {
-            this.setState({
-                errorText: error.message
+        createQuestion(questionData).then(() => {
+            if (actionError) {
+                this.setState({
+                    errorText: actionError,
                 });
+                return;
+            }
+
+            this.setState({
+                errorText: '',
+                title: '',
+                body: '',
+            });
+            history.push('/questions');
         });
-    }
+    };
 
     onChangeTitle = (event) => {
         const value = event.target.value;
         this.setState({
-            title: value   
+            title: value,
         });
-    }
+    };
 
     onChangeBody = (event) => {
         const value = event.target.value;
         this.setState({
-            body: value            
+            body: value,       
         });
-    }
+    };
 
     render() {
         return(
@@ -80,7 +83,7 @@ class NewQuestion extends Component {
                 <h1>Ask a question</h1>
                 <p>{this.state.errorText}</p>
 
-                <form className={styles.wrapper}>
+                <form className={styles.form}>
                     <h2>Title</h2>
                     <Input className={styles.title} name="title" type="text"
                            onChange={this.onChangeTitle}
@@ -99,11 +102,26 @@ class NewQuestion extends Component {
     }
 }
 
-// const mapStateToProps = (state) => {
-//     return {
-//       user: state.userReducer.user
-//     }
-// };
+const mapStateToProps = (state) => {
+    return {
+      user: state.userReducer.user,
+      actionError: state.questionReducer.error,
+    };
+};
 
-// export default connect(mapStateToProps, null)(NewQuestion);
-export default NewQuestion;
+const mapDispatchToProps = (dispatch) => {
+    return {
+      createQuestion: createQuestionDispatch(dispatch),
+    };
+};
+
+function createQuestionDispatch(dispatch) {
+    return (...args) => {
+        return new Promise((resolve) => { 
+            const dispatchCaller = createQuestionAction(...args);
+            dispatchCaller(dispatch).then(() => {resolve();});
+        });
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewQuestion);

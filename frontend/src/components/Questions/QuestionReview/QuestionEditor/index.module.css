@@ -1,0 +1,17 @@
+.editor {
+    display: flex;
+    flex-direction: column;
+  }
+
+.editor button {
+      width: 180px;
+      height: 40px;
+      display: block;
+      background-color: #3793C7;
+      color: #FFFFFF;
+  }
+
+.editor textarea {
+    font-size: 18px;
+    padding: 12px 20px 20px;
+}
